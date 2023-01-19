@@ -3,24 +3,18 @@
  *  Coursera User ID:  123456
  *  Last modified:     October 16, 1842
  **************************************************************************** */
-
-
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.StdIn;
-
-
 public class PercolationStats {
     private double critialValue = 1.96;
     private double[] x;
     private int sampleSize;
-
     // perform independent trials on an n-by-n grids
     public PercolationStats(int n, int trials) {
         if (n <= 0 || trials <= 0) throw new IllegalArgumentException();
         sampleSize = trials;
-        x = new double[0];
+        x = new double[trials];
         for (int i = 0; i < trials; i++) {
             Percolation perc = new Percolation(n);
             while (!perc.percolates()) {
@@ -31,11 +25,7 @@ public class PercolationStats {
             double numofOpensites = perc.numberOfOpenSites();
             double numofSites = n * n;
             double percThreshold = numofOpensites / numofSites;
-            // push new item to x array
-            double[] newX = new double[x.length + 1];
-            System.arraycopy(x, 0, newX, 0, x.length);
-            newX[x.length] = percThreshold;
-            x = newX;
+            x[i] = percThreshold;
         }
     }
 
@@ -67,16 +57,9 @@ public class PercolationStats {
     }
 
     public static void main(String[] args) {
-        PercolationStats percStats = null;
-        while (!StdIn.isEmpty()) {
-            int n = StdIn.readInt();
-            int trials = StdIn.readInt();
-            percStats = new PercolationStats(n, trials);
-            StdOut.println("mean                    = " + percStats.mean());
-            StdOut.println("stddev                  = " + percStats.stddev());
-            StdOut.println("95% confidence interval = [" + percStats.confidenceLo() + ", "
-                    + percStats.confidenceHi() + "]");
-        }
+        int n = Integer.parseInt(args[0]);
+        int trials = Integer.parseInt(args[1]);
+        PercolationStats percStats = new PercolationStats(n, trials);
         StdOut.println("mean                    = " + percStats.mean());
         StdOut.println("stddev                  = " + percStats.stddev());
         StdOut.println("95% confidence interval = [" + percStats.confidenceLo() + ", "
